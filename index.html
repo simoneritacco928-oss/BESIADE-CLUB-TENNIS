@@ -1,207 +1,339 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Prenota il Campo da Tennis</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    
-    h1, h2 {
-      color: #333;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prenotazione Campo Tennis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-    form, .bacheca {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
+  /* Sfondo campo da tennis leggero */
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #4caf5080 25%, #388e3c80 25%, #388e3c80 50%, #4caf5080 50%, #4caf5080 75%, #388e3c80 75%, #388e3c80 100%);
+    background-size: 80px 80px;
+    color: #1b3e18;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
 
-    label {
-      display: block;
-      margin-top: 10px;
-    }
+  .container {
+    background: #f9fef9dd;
+    max-width: 700px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.1);
+    padding: 30px 40px;
+  }
 
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
+  h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    color: #2e7d32;
+    text-shadow: 1px 1px 1px #a3d9a5;
+  }
 
-    button {
-      margin-top: 15px;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+  h2 {
+    border-bottom: 3px solid #66bb6a;
+    padding-bottom: 8px;
+    color: #2e7d32;
+  }
 
-    button:hover {
-      background-color: #45a049;
-    }
+  form label {
+    display: block;
+    margin-top: 18px;
+    font-weight: 600;
+  }
 
-    .success {
-      background: #d4edda;
-      color: #155724;
-      padding: 10px;
-      border-left: 4px solid #28a745;
-      margin-top: 10px;
-    }
+  form input[type="text"],
+  form input[type="date"],
+  form select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #81c784;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-top: 6px;
+    transition: border-color 0.3s ease;
+  }
 
-    .error {
-      background: #f8d7da;
-      color: #721c24;
-      padding: 10px;
-      border-left: 4px solid #dc3545;
-      margin-top: 10px;
-    }
+  form input[type="text"]:focus,
+  form input[type="date"]:focus,
+  form select:focus {
+    border-color: #388e3c;
+    outline: none;
+  }
 
+  button[type="submit"] {
+    margin-top: 25px;
+    width: 100%;
+    background: #388e3c;
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 10px rgb(56 142 60 / 0.6);
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    background: #2e7d32;
+  }
+
+  #messaggio {
+    margin-top: 20px;
+    font-weight: 700;
+  }
+
+  .success {
+    color: #2e7d32;
+    background: #c8e6c9;
+    border-left: 5px solid #388e3c;
+    padding: 12px 18px;
+    border-radius: 6px;
+  }
+
+  .error {
+    color: #b71c1c;
+    background: #ffcdd2;
+    border-left: 5px solid #d32f2f;
+    padding: 12px 18px;
+    border-radius: 6px;
+  }
+
+  .bacheca {
+    background: #e8f5e9;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px #81c784aa;
+  }
+
+  .prenotazione {
+    background: #ffffffdd;
+    border-left: 6px solid #66bb6a;
+    margin-bottom: 15px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    position: relative;
+    font-size: 1.1rem;
+    color: #2f4f2f;
+  }
+
+  .prenotazione button {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    background: #e53935;
+    border: none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgb(229 57 53 / 0.7);
+    transition: background-color 0.3s ease;
+  }
+
+  .prenotazione button:hover {
+    background: #b71c1c;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .container {
+      padding: 25px 20px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    button[type="submit"] {
+      font-size: 1rem;
+      padding: 12px;
+    }
     .prenotazione {
-      background: #f9f9f9;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid #4CAF50;
+      font-size: 1rem;
+      padding: 10px 15px;
     }
-  </style>
+  }
+</style>
 </head>
 <body>
+  <div class="container">
+    <h1>Prenota il Campo da Tennis 🎾</h1>
+    <form id="formPrenotazione" autocomplete="off">
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" required placeholder="Inserisci il tuo nome" />
 
-  <h1>Prenota il Campo da Tennis</h1>
+      <label for="data">Data</label>
+      <input type="date" id="data" required min="" />
 
-  <form id="formPrenotazione">
-    <label for="nome">Nome</label>
-    <input type="text" id="nome" required>
+      <label for="orarioInizio">Orario di inizio</label>
+      <select id="orarioInizio" required></select>
 
-    <label for="data">Data</label>
-    <input type="date" id="data" required>
+      <label for="durata">Durata</label>
+      <select id="durata" required>
+        <option value="30">30 minuti</option>
+        <option value="60">1 ora</option>
+        <option value="90">1 ora e 30 minuti</option>
+        <option value="120">2 ore</option>
+      </select>
 
-    <label for="orarioInizio">Orario di inizio</label>
-    <select id="orarioInizio" required></select>
+      <button type="submit">Prenota</button>
+      <div id="messaggio"></div>
+    </form>
 
-    <label for="durata">Durata</label>
-    <select id="durata" required>
-      <option value="30">30 minuti</option>
-      <option value="60">1 ora</option>
-      <option value="90">1 ora e 30 minuti</option>
-      <option value="120">2 ore</option>
-    </select>
-
-    <button type="submit">Prenota</button>
-    <div id="messaggio"></div>
-  </form>
-
-  <div class="bacheca">
-    <h2>📌 Bacheca delle Prenotazioni</h2>
-    <div id="listaPrenotazioni"></div>
+    <section class="bacheca">
+      <h2>📌 Bacheca delle Prenotazioni</h2>
+      <div id="listaPrenotazioni"></div>
+    </section>
   </div>
 
-  <script>
-    const form = document.getElementById('formPrenotazione');
-    const listaPrenotazioni = document.getElementById('listaPrenotazioni');
-    const messaggio = document.getElementById('messaggio');
+<script>
+  const form = document.getElementById('formPrenotazione');
+  const listaPrenotazioni = document.getElementById('listaPrenotazioni');
+  const messaggio = document.getElementById('messaggio');
+  const dataInput = document.getElementById('data');
 
-    let prenotazioni = JSON.parse(localStorage.getItem('prenotazioni')) || [];
+  // Imposta data minima a oggi
+  function setMinDate() {
+    const oggi = new Date();
+    const anno = oggi.getFullYear();
+    const mese = (oggi.getMonth() + 1).toString().padStart(2, '0');
+    const giorno = oggi.getDate().toString().padStart(2, '0');
+    dataInput.min = `${anno}-${mese}-${giorno}`;
+  }
+  setMinDate();
+
+  let prenotazioni = JSON.parse(localStorage.getItem('prenotazioni')) || [];
+
+  mostraPrenotazioni();
+  generaOrari();
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const nome = document.getElementById('nome').value.trim();
+    const data = document.getElementById('data').value;
+    const orarioInizio = document.getElementById('orarioInizio').value;
+    const durata = parseInt(document.getElementById('durata').value);
+    const orarioFine = calcolaFine(orarioInizio, durata);
+    const orario = `${orarioInizio} - ${orarioFine}`;
+
+    if (!nome) {
+      mostraMessaggio('Inserisci un nome valido.', 'error');
+      return;
+    }
+    if (!data) {
+      mostraMessaggio('Seleziona una data.', 'error');
+      return;
+    }
+    if (!orarioInizio) {
+      mostraMessaggio('Seleziona un orario di inizio.', 'error');
+      return;
+    }
+
+    // Controlla sovrapposizioni
+    const conflitto = prenotazioni.find(p =>
+      p.data === data && orariSiSovrappongono(p.orario, orario)
+    );
+
+    if (conflitto) {
+      mostraMessaggio('⚠️ Questo orario è già prenotato!', 'error');
+      return;
+    }
+
+    // Aggiungi prenotazione
+    const nuovaPrenotazione = { nome, data, orario };
+    prenotazioni.push(nuovaPrenotazione);
+    localStorage.setItem('prenotazioni', JSON.stringify(prenotazioni));
 
     mostraPrenotazioni();
-    generaOrari();
+    form.reset();
+    setMinDate();
+    mostraMessaggio('✅ Prenotazione registrata con successo!', 'success');
+  });
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+  function mostraPrenotazioni() {
+    listaPrenotazioni.innerHTML = '';
+    if (prenotazioni.length === 0) {
+      listaPrenotazioni.innerHTML = '<p>Nessuna prenotazione ancora.</p>';
+      return;
+    }
 
-      const nome = document.getElementById('nome').value;
-      const data = document.getElementById('data').value;
-      const orarioInizio = document.getElementById('orarioInizio').value;
-      const durata = parseInt(document.getElementById('durata').value);
-      const orarioFine = calcolaFine(orarioInizio, durata);
-      const orario = `${orarioInizio} - ${orarioFine}`;
-
-      // Controlla sovrapposizioni
-      const conflitto = prenotazioni.find(p =>
-        p.data === data && orariSiSovrappongono(p.orario, orario)
-      );
-
-      if (conflitto) {
-        messaggio.innerHTML = '<div class="error">⚠️ Questo orario è già prenotato!</div>';
-        return;
-      }
-
-      const nuovaPrenotazione = { nome, data, orario };
-      prenotazioni.push(nuovaPrenotazione);
-      localStorage.setItem('prenotazioni', JSON.stringify(prenotazioni));
-
-      mostraPrenotazioni();
-      form.reset();
-      messaggio.innerHTML = '<div class="success">✅ Prenotazione registrata!</div>';
+    prenotazioni.sort((a, b) => {
+      const dataA = new Date(`${a.data}T${a.orario.split(' - ')[0]}`);
+      const dataB = new Date(`${b.data}T${b.orario.split(' - ')[0]}`);
+      return dataA - dataB;
     });
 
-    function mostraPrenotazioni() {
-      listaPrenotazioni.innerHTML = '';
-      if (prenotazioni.length === 0) {
-        listaPrenotazioni.innerHTML = '<p>Nessuna prenotazione ancora.</p>';
-        return;
-      }
+    prenotazioni.forEach((p, index) => {
+      const div = document.createElement('div');
+      div.classList.add('prenotazione');
+      div.innerHTML = `
+        <strong>${p.nome}</strong><br>
+        📅 ${p.data} ⏰ ${p.orario}
+        <button title="Elimina prenotazione" onclick="eliminaPrenotazione(${index})">🗑️</button>
+      `;
+      listaPrenotazioni.appendChild(div);
+    });
+  }
 
-      prenotazioni.sort((a, b) => {
-        const dataA = new Date(`${a.data}T${a.orario.split(' - ')[0]}`);
-        const dataB = new Date(`${b.data}T${b.orario.split(' - ')[0]}`);
-        return dataA - dataB;
-      });
-
-      prenotazioni.forEach(p => {
-        const div = document.createElement('div');
-        div.classList.add('prenotazione');
-        div.innerHTML = `<strong>${p.nome}</strong><br>📅 ${p.data} ⏰ ${p.orario}`;
-        listaPrenotazioni.appendChild(div);
-      });
+  function generaOrari() {
+    const select = document.getElementById('orarioInizio');
+    select.innerHTML = '<option value="">-- Seleziona orario --</option>';
+    const inizio = 6 * 60;  // 06:00 in minuti
+    const fine = 24 * 60;   // 00:00 in minuti (mezzanotte)
+    for (let i = inizio; i < fine; i += 30) {
+      const ore = Math.floor(i / 60).toString().padStart(2, '0');
+      const minuti = (i % 60).toString().padStart(2, '0');
+      const oraFormattata = `${ore}:${minuti}`;
+      select.innerHTML += `<option value="${oraFormattata}">${oraFormattata}</option>`;
     }
+  }
 
-    function generaOrari() {
-      const select = document.getElementById('orarioInizio');
-      const inizio = 6 * 60;  // 06:00
-      const fine = 24 * 60;   // 00:00
+  function calcolaFine(orarioInizio, durataMinuti) {
+    const [ore, minuti] = orarioInizio.split(':').map(Number);
+    let totMinuti = ore * 60 + minuti + durataMinuti;
+    if (totMinuti >= 24 * 60) totMinuti = 24 * 60;  // limite mezzanotte
+    const oreFine = Math.floor(totMinuti / 60).toString().padStart(2, '0');
+    const minFine = (totMinuti % 60).toString().padStart(2, '0');
+    return `${oreFine}:${minFine}`;
+  }
 
-      for (let i = inizio; i < fine; i += 30) {
-        const ore = Math.floor(i / 60).toString().padStart(2, '0');
-        const minuti = (i % 60).toString().padStart(2, '0');
-        const orario = `${ore}:${minuti}`;
-        const option = document.createElement('option');
-        option.value = orario;
-        option.textContent = orario;
-        select.appendChild(option);
-      }
-    }
+  function orariSiSovrappongono(orario1, orario2) {
+    // orario formato "HH:MM - HH:MM"
+    const [start1, end1] = orario1.split(' - ');
+    const [start2, end2] = orario2.split(' - ');
 
-    function calcolaFine(orarioInizio, durataMinuti) {
-      const [h, m] = orarioInizio.split(':').map(Number);
-      const inizioMin = h * 60 + m;
-      const fineMin = inizioMin + durataMinuti;
-      const ore = Math.floor(fineMin / 60).toString().padStart(2, '0');
-      const minuti = (fineMin % 60).toString().padStart(2, '0');
-      return `${ore}:${minuti}`;
-    }
-
-    function orariSiSovrappongono(a, b) {
-      const [startA, endA] = a.split(' - ').map(toMinuti);
-      const [startB, endB] = b.split(' - ').map(toMinuti);
-      return startA < endB && startB < endA;
-    }
-
-    function toMinuti(ora) {
-      const [h, m] = ora.split(':').map(Number);
+    const inMinuti = s => {
+      const [h, m] = s.split(':').map(Number);
       return h * 60 + m;
-    }
-  </script>
+    };
 
+    return (inMinuti(start1) < inMinuti(end2)) && (inMinuti(start2) < inMinuti(end1));
+  }
+
+  function mostraMessaggio(msg, tipo) {
+    messaggio.innerHTML = `<div class="${tipo}">${msg}</div>`;
+    setTimeout(() => messaggio.innerHTML = '', 4000);
+  }
+
+  function eliminaPrenotazione(index) {
+    if (confirm("Sei sicuro di voler eliminare questa prenotazione?")) {
+      prenotazioni.splice(index, 1);
+      localStorage.setItem('prenotazioni', JSON.stringify(prenotazioni));
+      mostraPrenotazioni();
+      mostraMessaggio('✅ Prenotazione eliminata con successo.', 'success');
+    }
+  }
+</script>
 </body>
 </html>
