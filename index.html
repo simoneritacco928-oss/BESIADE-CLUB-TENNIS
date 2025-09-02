@@ -92,15 +92,15 @@
     <label for="data">Data</label>
     <input type="date" id="data" required>
 
-    <label for="orario">Orario</label>
-    <select id="orario" required>
-      <option value="">--Seleziona un orario--</option>
-      <option value="09:00">09:00 - 10:00</option>
-      <option value="10:00">10:00 - 11:00</option>
-      <option value="11:00">11:00 - 12:00</option>
-      <option value="17:00">17:00 - 18:00</option>
-      <option value="18:00">18:00 - 19:00</option>
-      <option value="19:00">19:00 - 20:00</option>
+    <label for="orarioInizio">Orario di inizio</label>
+    <select id="orarioInizio" required></select>
+
+    <label for="durata">Durata</label>
+    <select id="durata" required>
+      <option value="30">30 minuti</option>
+      <option value="60">1 ora</option>
+      <option value="90">1 ora e 30 min</option>
+      <option value="120">2 ore</option>
     </select>
 
     <button type="submit">Prenota</button>
@@ -115,7 +115,8 @@
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    emailjs.init('YOUR_PUBLIC_KEY'); // Inserisci la tua Public Key di EmailJS
+    // Inizializza EmailJS (ATTIVA SOLO SE HAI LE TUE CHIAVI)
+    // emailjs.init('YOUR_PUBLIC_KEY');
 
     const form = document.getElementById('formPrenotazione');
     const listaPrenotazioni = document.getElementById('listaPrenotazioni');
@@ -124,6 +125,7 @@
     let prenotazioni = JSON.parse(localStorage.getItem('prenotazioni')) || [];
 
     mostraPrenotazioni();
+    generaOrari();
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -131,22 +133,31 @@
       const nome = document.getElementById('nome').value;
       const email = document.getElementById('email').value;
       const data = document.getElementById('data').value;
-      const orario = document.getElementById('orario').value;
+      const orarioInizio = document.getElementById('orarioInizio').value;
+      const durata = parseInt(document.getElementById('durata').value);
+      const orarioFine = calcolaFine(orarioInizio, durata);
+      const orario = `${orarioInizio} - ${orarioFine}`;
 
-      const duplicato = prenotazioni.find(p => p.data === data && p.orario === orario);
-      if (duplicato) {
-        messaggio.innerHTML = '<div class="error">Orario già prenotato!</div>';
+      // Controllo doppie prenotazioni
+      const conflitto = prenotazioni.find(p => 
+        p.data === data && orariSiSovrappongono(p.orario, orario)
+      );
+
+      if (conflitto) {
+        messaggio.innerHTML = '<div class="error">⚠️ Questo orario è già prenotato!</div>';
         return;
       }
 
-      const prenotazione = { nome, email, data, orario };
-      prenotazioni.push(prenotazione);
+      const nuovaPrenotazione = { nome, email, data, orario };
+      prenotazioni.push(nuovaPrenotazione);
       localStorage.setItem('prenotazioni', JSON.stringify(prenotazioni));
+
       mostraPrenotazioni();
       form.reset();
-      messaggio.innerHTML = '<div class="success">Prenotazione avvenuta con successo!</div>';
+      messaggio.innerHTML = '<div class="success">✅ Prenotazione confermata!</div>';
 
-      // Invio email con EmailJS
+      // Invia email (se hai configurato EmailJS)
+      /*
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
         nome: nome,
         email: email,
@@ -155,8 +166,9 @@
       }).then(() => {
         console.log('Email inviata!');
       }).catch((err) => {
-        console.error('Errore email:', err);
+        console.error('Errore invio email:', err);
       });
+      */
     });
 
     function mostraPrenotazioni() {
@@ -166,11 +178,47 @@
         div.classList.add('prenotazione');
         div.innerHTML = `
           <strong>${p.nome}</strong><br>
-          <small>${p.data} alle ${p.orario}</small><br>
+          <small>${p.data} dalle ${p.orario}</small><br>
           <em>${p.email}</em>
         `;
         listaPrenotazioni.appendChild(div);
       });
+    }
+
+    function generaOrari() {
+      const select = document.getElementById('orarioInizio');
+      const inizio = 6 * 60;  // 06:00
+      const fine = 24 * 60;   // 00:00
+
+      for (let i = inizio; i < fine; i += 30) {
+        const ore = Math.floor(i / 60).toString().padStart(2, '0');
+        const minuti = (i % 60).toString().padStart(2, '0');
+        const orario = `${ore}:${minuti}`;
+        const option = document.createElement('option');
+        option.value = orario;
+        option.textContent = orario;
+        select.appendChild(option);
+      }
+    }
+
+    function calcolaFine(orarioInizio, durataMinuti) {
+      const [h, m] = orarioInizio.split(':').map(Number);
+      const inizioMin = h * 60 + m;
+      const fineMin = inizioMin + durataMinuti;
+      const ore = Math.floor(fineMin / 60).toString().padStart(2, '0');
+      const minuti = (fineMin % 60).toString().padStart(2, '0');
+      return `${ore}:${minuti}`;
+    }
+
+    function orariSiSovrappongono(a, b) {
+      const [startA, endA] = a.split(' - ').map(toMinuti);
+      const [startB, endB] = b.split(' - ').map(toMinuti);
+      return startA < endB && startB < endA;
+    }
+
+    function toMinuti(ora) {
+      const [h, m] = ora.split(':').map(Number);
+      return h * 60 + m;
     }
   </script>
 
